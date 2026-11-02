@@ -1,0 +1,9 @@
+# Used only for standalone `kubectl apply -k`. When deployed through Argo CD, the namespace
+# is defined in the k3s-lab repo (namespaces/ai-development.yaml) instead.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ai-development
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/enforce-version: latest

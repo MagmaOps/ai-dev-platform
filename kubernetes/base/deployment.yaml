@@ -1,0 +1,76 @@
+# Interactive development Pod. Connect with:
+#   kubectl exec -it deployment/claude-dev -n ai-development -- bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: claude-dev
+  labels:
+    app.kubernetes.io/name: claude-dev
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  # Recreate: never run two dev Pods at once (they would share credentials and confuse `kubectl exec`).
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: claude-dev
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: claude-dev
+    spec:
+      serviceAccountName: claude-dev
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      terminationGracePeriodSeconds: 10
+      # No node affinity: the Pod can be recreated on any worker.
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: claude-dev
+          image: claude-dev
+          envFrom:
+            - configMapRef:
+                name: claude-dev-config
+          env:
+            # Both Secrets are created out-of-band (see docs). `optional` lets the Pod start
+            # without them; the entrypoint reports which credentials are missing.
+            - name: GH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: claude-dev-github
+                  key: GH_TOKEN
+                  optional: true
+            - name: CLAUDE_CODE_OAUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: claude-dev-claude
+                  key: CLAUDE_CODE_OAUTH_TOKEN
+                  optional: true
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests:
+              cpu: 250m
+              memory: 1Gi
+              ephemeral-storage: 1Gi
+            limits:
+              cpu: "2"
+              memory: 4Gi
+              ephemeral-storage: 8Gi
+          volumeMounts:
+            - name: workspace
+              mountPath: /workspace
+      volumes:
+        # Disposable workspace: lost when the Pod is replaced. Push work to GitHub.
+        - name: workspace
+          emptyDir:
+            sizeLimit: 5Gi

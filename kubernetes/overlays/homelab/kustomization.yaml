@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ai-development
+
+resources:
+  - namespace.yaml
+  - ../../base
+
+images:
+  - name: claude-dev
+    newName: magmakomer/claude-dev
+    newTag: 0.1.1

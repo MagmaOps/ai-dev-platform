@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: claude-dev-config
+data:
+  # Non-secret configuration, exposed to the Pod as environment variables.
+  # Git identity for commits made by the agent; overlays patch these to the agent's real identity.
+  GIT_AUTHOR_NAME: "claude-agent"
+  GIT_AUTHOR_EMAIL: "claude-agent@users.noreply.github.com"
+  GIT_COMMITTER_NAME: "claude-agent"
+  GIT_COMMITTER_EMAIL: "claude-agent@users.noreply.github.com"

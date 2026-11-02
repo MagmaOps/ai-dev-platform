@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Base manifests for the interactive Claude Code dev Pod. Consumed and patched by the k3s-lab repo
+# and by overlays/homelab. This base intentionally contains NO environment-specific values:
+#   - namespace          → set by the consumer
+#   - image tag          → pinned by the consumer (never `latest`)
+#   - GH_TOKEN           → Secret `claude-dev-github` (optional)
+#   - CLAUDE_CODE_OAUTH_TOKEN → Secret `claude-dev-claude` (optional)
+
+resources:
+  - serviceaccount.yaml
+  - configmap.yaml
+  - deployment.yaml
+
+# Default tag is only used for a standalone `kustomize build`; consumers pin their own.
+images:
+  - name: claude-dev
+    newName: magmakomer/claude-dev
+    newTag: 0.1.1
+
+# Metadata only: includeSelectors stays false so selectors are never altered.
+labels:
+  - pairs:
+      app.kubernetes.io/part-of: ai-dev-platform
+    includeSelectors: false
