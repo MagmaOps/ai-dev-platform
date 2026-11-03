@@ -39,6 +39,14 @@ spec:
             - configMapRef:
                 name: claude-dev-config
           env:
+            # git authenticates to github.com through `gh`, which reads GH_TOKEN. This keeps the
+            # token out of remote URLs, shell history and any on-disk git config.
+            - name: GIT_CONFIG_COUNT
+              value: "1"
+            - name: GIT_CONFIG_KEY_0
+              value: credential.https://github.com.helper
+            - name: GIT_CONFIG_VALUE_0
+              value: "!gh auth git-credential"
             # Both Secrets are created out-of-band (see docs). `optional` lets the Pod start
             # without them; the entrypoint reports which credentials are missing.
             - name: GH_TOKEN

@@ -12,3 +12,5 @@ secrets/
 Thumbs.db
 .vscode/
 .idea/
+
+docs/secret.md

@@ -15,7 +15,7 @@ Self-hosted, ephemeral Claude Code environment on a k3s homelab. The full design
 ## Layout and conventions
 
 - `docker/Dockerfile` image; build context is the repo root. Image: `magmakomer/claude-dev:<semver>` on Docker Hub (public). Never deploy `latest`.
-- `kubernetes/base/` has no homelab values (images, namespace, secrets are set by overlays). `kubernetes/overlays/homelab/` is for standalone `kubectl apply -k`.
+- `k8s/base/` has no homelab values (images, namespace, secrets are set by overlays). `k8s/overlays/homelab/` is for standalone `kubectl apply -k`.
 - GitOps wiring (Argo CD Application, namespace, sealed secrets) lives in the separate `k3s-lab` repo, following its `apps/job-search-lab` pattern. Reference app: `job-search-lab/k8s`.
 - Cluster: k3s, 1 control plane + 4 amd64 workers, Argo CD, Prometheus/Grafana, Sealed Secrets. Namespace: `ai-development`.
 - Shell scripts use LF line endings.
