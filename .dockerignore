@@ -1,3 +1,4 @@
 *
 !scripts/entrypoint.sh
 !scripts/healthcheck.sh
+!scripts/new-agent.sh

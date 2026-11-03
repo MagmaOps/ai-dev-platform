@@ -7,6 +7,9 @@ FROM node:${NODE_VERSION}-bookworm-slim
 
 ARG GH_VERSION=2.103.3
 ARG CLAUDE_CODE_VERSION=2.1.309
+ARG HERDR_VERSION=0.9.5
+# SHA-256 of herdr-linux-x86_64 for HERDR_VERSION (from https://herdr.dev/latest.json). Update both together.
+ARG HERDR_SHA256=14d9e8bc8b4a9e0118d77c32266f76d461f09b40342eb23752960bd89f59929d
 ARG DEV_UID=1000
 ARG DEV_GID=1000
 
@@ -16,7 +19,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
       bash ca-certificates curl git gnupg jq less openssh-client procps \
-      python3 python3-pip python3-venv ripgrep unzip \
+      python3 python3-pip python3-venv ripgrep tmux unzip \
  && install -d -m 0755 /etc/apt/keyrings \
  && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
       -o /etc/apt/keyrings/githubcli-archive-keyring.gpg \
@@ -28,6 +31,13 @@ RUN apt-get update \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
+# Herdr: terminal workspace manager that keeps agent sessions alive across disconnects.
+# Pinned binary, verified against its published checksum (no piping an install script).
+RUN curl -fsSL -o /usr/local/bin/herdr \
+      "https://github.com/herdrdev/herdr/releases/download/v${HERDR_VERSION}/herdr-linux-x86_64" \
+ && echo "${HERDR_SHA256}  /usr/local/bin/herdr" | sha256sum -c - \
+ && chmod 0755 /usr/local/bin/herdr
+
 # Non-root user. The node base image ships a "node" user at UID 1000; replace it.
 RUN userdel -r node \
  && groupadd --gid "${DEV_GID}" dev \
@@ -36,6 +46,7 @@ RUN userdel -r node \
  && chown dev:dev /workspace
 
 COPY --chmod=0755 scripts/entrypoint.sh scripts/healthcheck.sh /usr/local/bin/
+COPY --chmod=0755 scripts/new-agent.sh /usr/local/bin/new-agent
 
 USER dev
 ENV HOME=/home/dev \

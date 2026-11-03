@@ -1,0 +1,107 @@
+# EXAMPLE ONLY (design phase 3). Not applied, not referenced by any kustomization, not synced by Argo CD.
+# Shows how the existing image and Secrets can run one disposable, headless task.
+#
+#   kubectl create -f docs/examples/claude-job.example.yaml     # generateName: use `create`, not `apply`
+#
+# The image ENTRYPOINT runs the healthcheck and then `exec "$@"`, so `args` below is the task command.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: claude-task-
+  namespace: ai-development
+  labels:
+    app.kubernetes.io/name: claude-task
+    app.kubernetes.io/part-of: ai-dev-platform
+spec:
+  backoffLimit: 0                  # a failed agent run is not retried automatically
+  activeDeadlineSeconds: 3600      # hard stop for a runaway task
+  ttlSecondsAfterFinished: 86400   # keep the finished Pod's logs for a day, then clean up
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: claude-task
+    spec:
+      restartPolicy: Never
+      serviceAccountName: claude-dev        # same account: no token, no RBAC
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: task
+          image: magmakomer/claude-dev:0.1.2     # pin; never latest
+          envFrom:
+            - configMapRef:
+                name: claude-dev-config
+          env:
+            - name: REPO                         # owner/name, e.g. MagmaOps/some-repo
+              value: "MagmaOps/CHANGE-ME"
+            - name: BRANCH                       # becomes ai/<BRANCH>
+              value: "example-task"
+            - name: TASK
+              value: "Describe the task here."
+            - name: GIT_CONFIG_COUNT
+              value: "1"
+            - name: GIT_CONFIG_KEY_0
+              value: credential.https://github.com.helper
+            - name: GIT_CONFIG_VALUE_0
+              value: "!gh auth git-credential"
+            # Not optional here: a Job without credentials should fail at once, not run half-configured.
+            - name: GH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: claude-dev-github
+                  key: GH_TOKEN
+            - name: CLAUDE_CODE_OAUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: claude-dev-claude
+                  key: CLAUDE_CODE_OAUTH_TOKEN
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests:
+              cpu: 250m
+              memory: 1Gi
+              ephemeral-storage: 1Gi
+            limits:
+              cpu: "2"
+              memory: 4Gi
+              ephemeral-storage: 8Gi
+          volumeMounts:
+            - name: workspace
+              mountPath: /workspace
+          args:
+            - bash
+            - -euo
+            - pipefail
+            - -c
+            - |
+              git clone "https://github.com/${REPO}.git" /workspace/repo
+              cd /workspace/repo
+              git checkout -b "ai/${BRANCH}"
+              # Do not use --bare: it ignores CLAUDE_CODE_OAUTH_TOKEN.
+              claude -p "${TASK}" \
+                --permission-mode acceptEdits \
+                --allowedTools "Read" "Edit" "Write" "Bash(git:*)" "Bash(npm test:*)" \
+                --no-session-persistence \
+                --output-format text
+              # Commit and push only if the agent changed something.
+              if [ -n "$(git status --porcelain)" ]; then
+                git add -A
+                git commit -m "ai: ${BRANCH}"
+                git push -u origin "ai/${BRANCH}"
+              else
+                echo "No changes made."
+              fi
+      volumes:
+        - name: workspace
+          emptyDir:
+            sizeLimit: 5Gi
