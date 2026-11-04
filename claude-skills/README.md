@@ -1,4 +1,4 @@
-# claude-skills
+# claude-skills 
 
 Claude Code plugins that every agent Pod loads at start. This repo is also a plugin marketplace: `.claude-plugin/marketplace.json` at the repo root lists the plugins under `claude-skills/plugins/<name>/`. These are for the agents working in *other* repositories; this repo's own agent context is `CLAUDE.md`.
 
