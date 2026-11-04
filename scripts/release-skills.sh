@@ -14,7 +14,7 @@ apply=0; [ "${2:-}" = "--apply" ] && apply=1
 [[ $ver =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "usage: $0 X.Y.Z [--apply]" >&2; exit 2; }
 
 tag=skills-v$ver
-repo=${REPO:-$(git remote get-url origin | sed -E 's#^(https://github.com/|git@github.com:)##; s#\.git$##')}
+repo=${REPO:-$(git remote get-url origin | sed -E 's#^((https?|ssh)://)?([^@/]+@)?[^:/]+[:/]##; s#\.git$##')}
 cd "$(git rev-parse --show-toplevel)"
 
 die() { echo "release-skills: $*" >&2; exit 1; }
