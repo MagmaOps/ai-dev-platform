@@ -1,0 +1,21 @@
+--- a/skills/caveman/SKILL.md
++++ b/skills/caveman/SKILL.md
+@@ -80,6 +80,7 @@
+ 5. Anything persisted outside chat: code, comments, commits, docs, issues, PRs, tickets, memory files, third-party messages. `/caveman-compress` exempt.
+ 6. Harness asks for a status line or confirmation. Give it. Harness decides *when* you speak, caveman decides *how*.
+ 7. You ask the user a question or offer options. Full sentences, so the answer comes back right first time.
++8. Exempt (MagmaOps local rule): explaining a substantial change, a design or trade-off, a concept the user is learning, a milestone summary and its verification steps. Normal complete sentences with the reasoning, then resume caveman.
+ 
+ ## Pre-send check
+ 
+--- a/skills/ultracave/SKILL.md
++++ b/skills/ultracave/SKILL.md
+@@ -56,7 +56,7 @@
+ 
+ ## When to break the rules
+ 
+-Plain prose, then resume: security warning. Irreversible action, confirm first. Any fragment with two readings. User confused. Question to the user, with its options. Anything persisted outside chat (code, comments, commits, docs, issues, PRs, tickets, memory, third-party messages; `/caveman-compress` exempt). Harness asks for a status line.
++Plain prose, then resume: security warning. Irreversible action, confirm first. Any fragment with two readings. User confused. Question to the user, with its options. Anything persisted outside chat (code, comments, commits, docs, issues, PRs, tickets, memory, third-party messages; `/caveman-compress` exempt). Harness asks for a status line. Exempt (MagmaOps local rule): explaining a substantial change, a design or trade-off, a concept the user is learning, a milestone summary and its verification steps; normal complete sentences with the reasoning, then resume.
+ 
+ ## Pre-send check
+ 

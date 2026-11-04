@@ -37,6 +37,19 @@ for var in GH_TOKEN CLAUDE_CODE_OAUTH_TOKEN; do
   fi
 done
 
+# Default plugins: informational only, never fails the healthcheck.
+skills_status=$HOME/.cache/claude-skills/status
+if [ -r "$skills_status" ]; then
+  state=$(sed -n 's/^state=//p' "$skills_status")
+  case $state in
+    ok)       echo "ok       skills: $(sed -n 's/^ref=//p' "$skills_status") plugins: $(sed -n 's/^plugins=//p' "$skills_status")" ;;
+    disabled) echo "ok       skills: disabled" ;;
+    *)        echo "warn     skills: $state ($(sed -n 's/^reason=//p' "$skills_status"))" ;;
+  esac
+else
+  echo "warn     skills: install-skills.sh has not run"
+fi
+
 if [ -n "${ANTHROPIC_API_KEY:-}" ]; then
   echo "WARN     ANTHROPIC_API_KEY is set; Claude Code may bill the API instead of the subscription"
 fi

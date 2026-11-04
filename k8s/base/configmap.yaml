@@ -11,3 +11,12 @@ data:
   GIT_AUTHOR_EMAIL: "claude-agent@users.noreply.github.com"
   GIT_COMMITTER_NAME: "claude-agent"
   GIT_COMMITTER_EMAIL: "claude-agent@users.noreply.github.com"
+  # Default Claude Code plugins (scripts/install-skills.sh). Empty REF = off. The real values
+  # (repo, tag, pinned commit, plugin lists) are set by the k3s-lab overlay, never here.
+  CLAUDE_SKILLS_REPO: ""
+  CLAUDE_SKILLS_REF: ""
+  CLAUDE_SKILLS_SHA: ""
+  CLAUDE_SKILLS_PLUGINS: ""
+  CLAUDE_SKILLS_HOOK_PLUGINS: ""
+  # The Pod only uses our marketplace; stop Claude Code registering Anthropic's official one.
+  CLAUDE_CODE_DISABLE_OFFICIAL_MARKETPLACE_AUTOINSTALL: "1"

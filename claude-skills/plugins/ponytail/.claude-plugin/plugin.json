@@ -1,0 +1,9 @@
+{
+  "name": "ponytail",
+  "version": "5.3.3",
+  "description": "Lazy senior dev mode, always on. Trimmed and modified copy of dietrichgebert/ponytail 5.3.3 (see UPSTREAM.md).",
+  "author": { "name": "Dietrich Gebert", "url": "https://github.com/DietrichGebert" },
+  "homepage": "https://github.com/dietrichgebert/ponytail",
+  "repository": "https://github.com/dietrichgebert/ponytail",
+  "license": "MIT"
+}

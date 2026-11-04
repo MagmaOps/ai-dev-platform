@@ -1,0 +1,9 @@
+{
+  "name": "magmaops-skills",
+  "description": "Default Claude Code plugins for MagmaOps agent Pods",
+  "owner": { "name": "MagmaOps" },
+  "plugins": [
+    { "name": "caveman", "source": "./claude-skills/plugins/caveman", "description": "Terse caveman voice, always on (vendored, trimmed)" },
+    { "name": "ponytail", "source": "./claude-skills/plugins/ponytail", "description": "Lazy senior dev mode, always on (vendored, trimmed)" }
+  ]
+}

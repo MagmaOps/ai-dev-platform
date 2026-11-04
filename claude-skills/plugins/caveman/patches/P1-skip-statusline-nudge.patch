@@ -1,0 +1,13 @@
+--- a/src/hooks/caveman-activate.js
++++ b/src/hooks/caveman-activate.js
+@@ -444,6 +444,10 @@
+ }
+ 
+ let output = buildRuleset(mode);
++// MAGMAOPS PATCH P1: stop here and skip step 3 (the statusline nudge). The Pod has no statusline and
++// the nudge asks the model to edit settings.json on every fresh Pod. See ../../UPSTREAM.md.
++process.stdout.write(output);
++return;
+ 
+ // 3. Detect missing statusline config — nudge Claude to help set it up.
+ // One-shot (#661): the nudge costs ~90 tokens per session, so a marker file
