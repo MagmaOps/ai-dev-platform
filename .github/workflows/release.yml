@@ -1,0 +1,34 @@
+# .github/workflows/release.yml
+#
+# Merging to main validates, then publishes magmakomer/claude-dev:<version> to Docker Hub.
+# The version is the newTag in k8s/base/kustomization.yaml (no git tags). Only runs when
+# something that ends up in the image changes, so docs-only commits don't publish.
+# Rolling the new version out is a separate step in the k3s-lab repo.
+
+name: Release image
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docker/**'
+      - 'scripts/**'
+      - 'k8s/base/kustomization.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    uses: MagmaOps/k3s-lab-ci/.github/workflows/ai-dev-platform-validate.yaml@main
+    with:
+      ref: ${{ github.sha }}
+
+  publish:
+    needs: validate
+    uses: MagmaOps/k3s-lab-ci/.github/workflows/ai-dev-platform-publish.yaml@main
+    with:
+      ref: ${{ github.sha }}
+    secrets: inherit

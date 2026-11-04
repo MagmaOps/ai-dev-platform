@@ -1,0 +1,23 @@
+# .github/workflows/main-pr.yml
+
+name: Main pr validate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+
+# Cancel an in-flight validation when the PR gets new commits.
+concurrency:
+  group: ai-dev-platform-validate-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ai-dev-platform-ci:
+    uses: MagmaOps/k3s-lab-ci/.github/workflows/ai-dev-platform-validate.yaml@main
+    with:
+      ref: ${{ github.event.pull_request.head.sha }}
