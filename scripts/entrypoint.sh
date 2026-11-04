@@ -4,6 +4,8 @@
 set -u
 
 echo "== claude-dev starting =="
+# Default Claude Code plugins (never fatal; see docs/skills-design.md).
+/usr/local/bin/install-skills.sh
 /usr/local/bin/healthcheck.sh || echo "Healthcheck reported problems (see above)."
 
 echo "== ready; connect with: kubectl exec -it deployment/claude-dev -n ai-development -- bash =="

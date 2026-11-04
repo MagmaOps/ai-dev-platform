@@ -1,4 +1,5 @@
 *
 !scripts/entrypoint.sh
 !scripts/healthcheck.sh
+!scripts/install-skills.sh
 !scripts/new-agent.sh

@@ -1,0 +1,20 @@
+{
+  "name": "caveman",
+  "version": "4.0.1",
+  "description": "Terse caveman voice, always on. Unofficial, trimmed and modified copy of juliusbrussee/caveman 4.0.1 (see UPSTREAM.md).",
+  "author": { "name": "Julius Brussee", "url": "https://github.com/JuliusBrussee" },
+  "homepage": "https://github.com/juliusbrussee/caveman",
+  "repository": "https://github.com/juliusbrussee/caveman",
+  "license": "Apache-2.0",
+  "hooks": {
+    "SessionStart": [
+      { "hooks": [ { "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/src/hooks/caveman-activate.js\"", "timeout": 10 } ] }
+    ],
+    "SubagentStart": [
+      { "hooks": [ { "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/src/hooks/caveman-activate.js\" --subagent", "timeout": 10 } ] }
+    ],
+    "UserPromptSubmit": [
+      { "hooks": [ { "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/src/hooks/caveman-mode-tracker.js\"", "timeout": 10 } ] }
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+--- a/src/hooks/caveman-mode-tracker.js
++++ b/src/hooks/caveman-mode-tracker.js
+@@ -117,7 +117,9 @@
+     ' Answer only what was asked: no unrequested background, lists, examples,' +
+     ' walkthroughs, or follow-up offers; give code, steps, or warnings when the' +
+     ' task needs them. Security warnings, irreversible actions, multi-step order:' +
+-    ' normal prose. Technical terms, code, commands, paths, and errors stay exact.';
++    // MAGMAOPS PATCH P2: exemption for explanations (owner is learning; see ../../UPSTREAM.md).
++    ' normal prose. Exempt from caveman, write in normal complete sentences with the reasoning: explaining a substantial change, a design or trade-off, a concept the user is learning, a milestone summary and its verification steps.' +
++    ' Technical terms, code, commands, paths, and errors stay exact.';
+ }
+ 
+ function removeFlag(path) {

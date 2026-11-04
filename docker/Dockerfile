@@ -45,7 +45,7 @@ RUN userdel -r node \
  && mkdir -p /workspace \
  && chown dev:dev /workspace
 
-COPY --chmod=0755 scripts/entrypoint.sh scripts/healthcheck.sh /usr/local/bin/
+COPY --chmod=0755 scripts/entrypoint.sh scripts/healthcheck.sh scripts/install-skills.sh /usr/local/bin/
 COPY --chmod=0755 scripts/new-agent.sh /usr/local/bin/new-agent
 
 USER dev
