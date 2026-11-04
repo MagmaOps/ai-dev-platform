@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Git Bash entry point for the `agent` launcher (agent.cmd only resolves with its extension there).
+# Usage is the same as agent.ps1:  agent   |   agent -Repo MagmaOps/x -Task fix-login
+here=$(cd "$(dirname "$0")" && pwd)
+script=$(cygpath -w "$here/agent.ps1")
+
+# Git Bash's terminal (mintty) is not a real Windows console, so kubectl -it needs winpty.
+run=(powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$script" "$@")
+if [ -t 0 ] && command -v winpty >/dev/null 2>&1; then
+  exec winpty "${run[@]}"
+fi
+exec "${run[@]}"

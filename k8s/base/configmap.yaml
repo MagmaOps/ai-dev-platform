@@ -4,6 +4,8 @@ metadata:
   name: claude-dev-config
 data:
   # Non-secret configuration, exposed to the Pod as environment variables.
+  # Herdr panes use $SHELL; without it they fall back to /bin/sh (no history or completion).
+  SHELL: "/bin/bash"
   # Git identity for commits made by the agent; overlays patch these to the agent's real identity.
   GIT_AUTHOR_NAME: "claude-agent"
   GIT_AUTHOR_EMAIL: "claude-agent@users.noreply.github.com"

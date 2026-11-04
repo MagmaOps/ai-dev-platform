@@ -28,7 +28,8 @@ if ($LASTEXITCODE -ne 0) { throw "Deployment $Deployment is not ready." }
 
 if ($Repo) {
     kubectl exec "deployment/$Deployment" -n $Namespace -- new-agent $Repo $Task
-    if ($LASTEXITCODE -ne 0) { throw 'new-agent failed (see message above).' }
+    if ($LASTEXITCODE -eq 3) { Write-Host "Task '$Task' already exists; attaching to the running session." }
+    elseif ($LASTEXITCODE -ne 0) { throw 'new-agent failed (see message above).' }
 }
 
 kubectl exec -it "deployment/$Deployment" -n $Namespace -- herdr

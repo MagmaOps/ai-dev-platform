@@ -18,7 +18,11 @@ task=$2
 [[ $task =~ ^[a-z0-9][a-z0-9-]*$ ]] || die "task must be lowercase letters, digits and dashes"
 
 dir=/workspace/$task
-[ ! -e "$dir" ] || die "$dir already exists (pick another task name)"
+if [ -e "$dir" ]; then
+  # Exit 3 = already exists; the Windows launcher treats this as "just attach".
+  echo "new-agent: $dir already exists (pick another task name to start a new one)" >&2
+  exit 3
+fi
 
 # The Herdr CLI needs a running server, and the server only starts with a client.
 # Hold it with a detached client in a hidden tmux session; real clients attach alongside it.

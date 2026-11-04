@@ -19,6 +19,12 @@ To use `agent` from any terminal, add `D:\Work\projects\ai-dev-platform\tools\wi
 
 The launcher waits for the Deployment to be ready, then runs `kubectl exec`. Plain `kubectl exec -it deployment/claude-dev -n ai-development -- bash` still works as a fallback.
 
+### First steps in Herdr
+
+When you run plain `agent`, you land in the default workspace, which is just a **shell** with no agent in it. Type `claude` there to start one; slash commands like `/status` only work inside Claude Code, not at the shell prompt. The sidebar's "agents" list stays empty until a pane is running a supported agent.
+
+The easier route is `agent -Repo MagmaOps/<repo> -Task <name>`: it starts a workspace with Claude already running on its own branch. Use `Ctrl+B` then `w` to switch between workspaces, and `Ctrl+B` then `?` for the full key list.
+
 ### Herdr basics
 
 - Detach: `Ctrl+B` then `Q`. Agents keep running. Run `agent` again to reattach.

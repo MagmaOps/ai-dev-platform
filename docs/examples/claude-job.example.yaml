@@ -34,7 +34,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: task
-          image: magmakomer/claude-dev:0.1.2     # pin; never latest
+          image: magmakomer/claude-dev:0.1.3     # pin; never latest
           envFrom:
             - configMapRef:
                 name: claude-dev-config
