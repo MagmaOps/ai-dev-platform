@@ -31,4 +31,4 @@ Runs the hooks in a sandbox (Node permission model, temp config dir) and validat
 
 ## Release
 
-Feature branch, PR and review, then the owner creates the `skills-vX.Y.Z` tag and updates the pin in `k3s-lab`. See the design note, "Release and rollback".
+Feature branch, PR and review, then the owner creates the `skills-vX.Y.Z` tag and updates the pin in `k3s-lab`. See the design note, "Release and rollback". 
