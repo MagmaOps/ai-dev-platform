@@ -21,3 +21,19 @@ jobs:
     uses: MagmaOps/k3s-lab-ci/.github/workflows/ai-dev-platform-validate.yaml@main
     with:
       ref: ${{ github.event.pull_request.head.sha }}
+
+  # Single check for the branch ruleset: red if any validation job failed or was skipped.
+  # Require "Validate" instead of the individual ai-dev-platform-ci / * checks, so adding
+  # or renaming jobs in k3s-lab-ci never needs a ruleset change.
+  validate:
+    name: Validate
+    needs: ai-dev-platform-ci
+    if: ${{ always() }}
+    runs-on: arc-runners
+    steps:
+      - name: Require all validation jobs to pass
+        env:
+          RESULT: ${{ needs.ai-dev-platform-ci.result }}
+        run: |
+          echo "validation result: $RESULT"
+          [ "$RESULT" = "success" ]
