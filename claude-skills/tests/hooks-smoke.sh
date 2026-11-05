@@ -65,8 +65,15 @@ unexpected=$(cd "$home" && find . -type f ! -name settings.json | grep -v -E '^\
 [ -z "$unexpected" ] && ok "only the expected state files exist" || { bad "unexpected files:"; echo "$unexpected"; }
 [ -z "$(find "$cav" "$pony" -newer "$tmp" -type f 2>/dev/null)" ] && ok "plugin directories untouched" || bad "plugin directory modified"
 
-if command -v claude >/dev/null 2>&1; then
-  echo "== marketplace (claude $(claude --version 2>/dev/null | cut -d' ' -f1))"
+# The marketplace checks use CLI features of the pinned Claude Code, so they run only on that version or newer.
+pin=$(sed -n 's/^ARG CLAUDE_CODE_VERSION=//p' "$root/docker/Dockerfile")
+have=$(claude --version 2>/dev/null | cut -d' ' -f1)
+if [ -z "$have" ]; then
+  echo "skip  marketplace checks (claude not found)"
+elif [ -n "$pin" ] && [ "$(printf '%s\n%s\n' "$pin" "$have" | sort -V | head -1)" != "$pin" ]; then
+  echo "skip  marketplace checks (claude $have is older than the pinned $pin; update it to run them)"
+else
+  echo "== marketplace (claude $have)"
   cfg=$tmp/cfg; mkdir -p "$cfg"
   export CLAUDE_CONFIG_DIR=$cfg
   claude plugin validate --strict "$root" >/dev/null 2>&1 && ok "validate --strict" || { bad "validate --strict"; claude plugin validate --strict "$root" 2>&1 | tail -8; }
@@ -77,8 +84,6 @@ if command -v claude >/dev/null 2>&1; then
   det=$(claude plugin details caveman 2>&1); has "$det" "Hooks (3)" "caveman: 3 hooks"; has "$det" "Skills (2)" "caveman: 2 skills"
   det=$(claude plugin details ponytail 2>&1); has "$det" "Hooks (2)" "ponytail: 2 hooks"; has "$det" "Skills (1)" "ponytail: 1 skill"
   hasnt "$det" "MCP servers ([1-9]" "ponytail: no MCP servers"
-else
-  echo "skip  marketplace checks (claude not found)"
 fi
 
 [ "$fail" = 0 ] && echo "ALL OK" || echo "FAILURES"
