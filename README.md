@@ -1,4 +1,4 @@
-# AI Development Platform
+# AI Development Platform 
 
 Self-hosted, ephemeral Claude Code environment on a k3s homelab. Connect from Windows with `kubectl exec`, give the agent a task, and it works on GitHub feature branches. The Pod is disposable and everything needed to recreate it is in Git and Kubernetes Secrets.
 
