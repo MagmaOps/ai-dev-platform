@@ -32,4 +32,10 @@ if ($Repo) {
     elseif ($LASTEXITCODE -ne 0) { throw 'new-agent failed (see message above).' }
 }
 
-kubectl exec -it "deployment/$Deployment" -n $Namespace -- herdr
+# kubectl exec -it can hand the Pod a 0x0 terminal until the first resize event, which makes
+# herdr refuse to attach. Pass the local window size and set it with stty before starting herdr.
+$cols = 0; $rows = 0
+try { $cols = $Host.UI.RawUI.WindowSize.Width; $rows = $Host.UI.RawUI.WindowSize.Height } catch {}
+if ($cols -lt 1 -or $rows -lt 1) { $cols = 120; $rows = 30 }
+
+kubectl exec -it "deployment/$Deployment" -n $Namespace -- sh -c "stty cols $cols rows $rows 2>/dev/null; exec herdr"
