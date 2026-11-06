@@ -5,7 +5,7 @@ set -u
 
 fail=0
 
-for tool in claude gh git node python3 jq curl bash rg herdr tmux new-agent; do
+for tool in claude gh git node python3 jq curl bash rg uv herdr tmux new-agent; do
   if command -v "$tool" >/dev/null 2>&1; then
     echo "ok       tool: $tool"
   else

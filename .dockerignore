@@ -3,3 +3,4 @@
 !scripts/healthcheck.sh
 !scripts/install-skills.sh
 !scripts/new-agent.sh
+!docker/user-claude.md
