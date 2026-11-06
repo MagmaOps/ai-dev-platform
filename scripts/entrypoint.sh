@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bash 
 # Verifies the environment, then stays alive so you can `kubectl exec` into it.
 # Claude Code is not started automatically.
 set -u
