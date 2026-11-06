@@ -28,6 +28,10 @@ jobs:
 
   publish:
     needs: validate
+    # The publish workflow comments the released version on the PR, so the caller must grant this.
+    permissions:
+      contents: read
+      pull-requests: write
     uses: MagmaOps/k3s-lab-ci/.github/workflows/ai-dev-platform-publish.yaml@main
     with:
       ref: ${{ github.sha }}
