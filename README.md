@@ -24,7 +24,7 @@ docker build -f docker/Dockerfile -t magmakomer/claude-dev:<version> .
 docker run --rm magmakomer/claude-dev:<version> healthcheck.sh
 ```
 
-Pinned versions are build args at the top of the Dockerfile: `NODE_VERSION`, `GH_VERSION`, `CLAUDE_CODE_VERSION`. Auto-update is disabled in the image; upgrade by bumping the arg and rebuilding.
+Pinned versions are build args at the top of the Dockerfile: `NODE_VERSION`, `GH_VERSION`, `CLAUDE_CODE_VERSION`, `UV_VERSION`. Auto-update is disabled in the image; upgrade by bumping the arg and rebuilding.
 
 ## Layout
 

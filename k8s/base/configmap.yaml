@@ -20,3 +20,9 @@ data:
   CLAUDE_SKILLS_HOOK_PLUGINS: ""
   # The Pod only uses our marketplace; stop Claude Code registering Anthropic's official one.
   CLAUDE_CODE_DISABLE_OFFICIAL_MARKETPLACE_AUTOINSTALL: "1"
+  # Python tooling. uv downloads the Python a project asks for (e.g. 3.12) into the workspace,
+  # so installs and caches do not fill the container's ephemeral storage.
+  UV_PYTHON_INSTALL_DIR: "/workspace/.uv/python"
+  UV_CACHE_DIR: "/workspace/.uv/cache"
+  UV_LINK_MODE: "copy"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"

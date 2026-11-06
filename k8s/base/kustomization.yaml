@@ -17,7 +17,7 @@ resources:
 images:
   - name: claude-dev
     newName: magmakomer/claude-dev
-    newTag: 0.2.0
+    newTag: 0.3.0
 
 # Metadata only: includeSelectors stays false so selectors are never altered.
 labels:

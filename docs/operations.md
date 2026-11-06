@@ -99,3 +99,14 @@ Do not deploy `latest`.
 ## Renew credentials
 
 See [authentication.md](authentication.md). Calendar the GitHub PAT expiry and the Claude token expiry (about one year after 2026-11-03).
+
+## Python in the Pod
+
+The system Python is 3.11 (Debian bookworm), but projects may need newer. Use `uv`, which downloads the requested Python into `/workspace/.uv` (no root needed):
+
+```bash
+uv venv --python 3.12 /workspace/.venv-<repo>
+uv pip install --python /workspace/.venv-<repo> -e ".[dev]"
+```
+
+Create venvs outside the repo; a `.venv` from Windows (`Scripts/`) does not work in the Pod. Egress is open, so a command that runs for more than a couple of minutes is stuck, not slow: stop it and report.
